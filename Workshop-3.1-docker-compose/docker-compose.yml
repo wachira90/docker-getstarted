@@ -1,0 +1,15 @@
+services:
+
+  web:
+    image: docker.io/library/myapp:v2
+    ports:
+      - 8011:8080
+    secrets:
+      - db_user
+      - db_password
+
+secrets:
+  db_user:
+    file: ./db_user.txt
+  db_password:
+    file: ./db_password.txt
