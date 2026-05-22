@@ -7,20 +7,24 @@
 - Log Rotation
 
 
-
 ## Command For Develop
-
---restart=unless-stopped
 
 
 ### FOR BUILD WITH INTERNET
 
-docker run --rm -it --network=host --entrypoint bash public.ecr.aws/docker/library/python:3.12-slim-bullseye
+docker run --rm -it -w /app --entrypoint bash public.ecr.aws/docker/library/python:3.12-slim-bullseye
 
+docker run --rm -it -w /app --entrypoint bash public.ecr.aws/docker/library/python:3.12-slim-bullseye
+
+docker run --rm -it -w /app -p 8022:8080 -v.\pydata\:/app --entrypoint bash public.ecr.aws/docker/library/python:3.12-slim-bullseye
+
+pip install bottle
+
+python main.py
 
 ### FOR RUN COMMAND
 
-docker run --rm -it -p 8011:8022 --entrypoint bash public.ecr.aws/docker/library/python:3.12-slim-bullseye
+docker run --rm -it -p 8011:8080 --entrypoint bash public.ecr.aws/docker/library/python:3.12-slim-bullseye
 
 
 ### START WITH COMMAND

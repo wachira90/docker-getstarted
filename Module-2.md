@@ -182,3 +182,18 @@ docker logs [OPTIONS] [CONTAINER_NAME_OR_ID]
 * `docker logs my-web` : แสดง Logs ทั้งหมดตั้งแต่เริ่มต้นรันคอนเทนเนอร์ my-web
 * `docker logs -f my-web` : การใช้ flag `-f` (follow) จะเป็นการเกาะดู Logs แบบเรียลไทม์ (เหมือนคำสั่ง `tail -f` ใน Linux) หน้าจอจะอัปเดตอัตโนมัติเมื่อมี Log ใหม่เข้ามา
 * `docker logs --tail 50 my-web` : แสดง Logs เฉพาะ 50 บรรทัดล่าสุด เพื่อไม่ให้ข้อมูลเยอะจนเกินไป
+
+#### เพิ่มเติม
+
+การทำ Logrotate
+
+```yml
+services:
+  my-app:
+    image: nginx
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+```
