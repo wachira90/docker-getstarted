@@ -9,7 +9,7 @@ COPY index.html /usr/share/nginx/html/index.html
 # เปิดพอร์ต 80
 EXPOSE 80
 
-# docker build -t www:v1 .
+# docker build -t www:v1 . --no-cache
 
 # docker run -it --name www -p 8022:80 www:v1
 # docker run -it --name www -p 8022:80 docker.io/library/www:v1

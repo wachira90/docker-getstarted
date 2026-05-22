@@ -18,7 +18,7 @@ EXPOSE 8080
 
 CMD ["./main"]
 
-# docker buildx build -t myapp:v1 .
+# docker buildx build -t myapp:v1 . --no-cache
 
 # docker.io/library/myapp:v1
 

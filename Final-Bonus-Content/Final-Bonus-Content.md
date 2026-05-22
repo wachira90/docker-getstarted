@@ -16,7 +16,7 @@ docker run --rm -it -w /app --entrypoint bash public.ecr.aws/docker/library/pyth
 
 docker run --rm -it -w /app --entrypoint bash public.ecr.aws/docker/library/python:3.12-slim-bullseye
 
-docker run --rm -it -w /app -p 8022:8080 -v.\pydata\:/app --entrypoint bash public.ecr.aws/docker/library/python:3.12-slim-bullseye
+docker run --rm -it -w /app -p 8022:8080 -v .\pydata\:/app --entrypoint bash public.ecr.aws/docker/library/python:3.12-slim-bullseye
 
 pip install bottle
 

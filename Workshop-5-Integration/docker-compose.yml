@@ -6,6 +6,8 @@ services:
         restart: always
         volumes:
             - db_data:/var/lib/mysql:rw
+            - .\data-xx\:/app/data-xx:rw
+            # - ./data-pb/:/app/data-pb:rw
             # - ./data/:/var/lib/mysql:rw
         environment:
             MYSQL_USER: sysadmin
@@ -24,6 +26,15 @@ services:
             - mysql
         ports:
             - 8081:8080
+
+    www:
+        image: www:v1
+        container_name: www
+        restart: always
+        volumes:
+            - .\data-xx\:/usr/share/nginx/html/:rw
+        ports:
+            - 7000:80
 
 volumes:
     db_data:
