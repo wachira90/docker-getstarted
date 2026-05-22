@@ -1,0 +1,29 @@
+services:
+
+    mysql:
+        image: wachira90/mysql:5.7.36
+        container_name: mysql
+        restart: always
+        volumes:
+            - db_data:/var/lib/mysql:rw
+            # - ./data/:/var/lib/mysql:rw
+        environment:
+            MYSQL_USER: sysadmin
+            MYSQL_PASSWORD: Example1234
+            MYSQL_ROOT_PASSWORD: Example1234
+            MYSQL_DATABASE: testdb
+        command: --query_cache_type=1 --query-cache-limit=524288 --query-cache-min-res-unit=2048 --query-cache-size=83886080 --explicit_defaults_for_timestamp
+        ports:
+            - 3306:3306
+
+    adminer_mysql:
+        image: wachira90/adminer:4.7.8
+        container_name: adminer_mysql
+        restart: always
+        links:
+            - mysql
+        ports:
+            - 8081:8080
+
+volumes:
+    db_data:
