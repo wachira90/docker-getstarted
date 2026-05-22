@@ -1,19 +1,15 @@
-FROM public.ecr.aws/docker/library/golang:1.22.1-alpine3.19 AS build
+FROM nginx:alpine
 
-WORKDIR /app
+# คัดลอกไฟล์คอนฟิกูเรชันของ Nginx
+COPY nginx.conf /etc/nginx/default.conf
 
-COPY . .
+# คัดลอกไฟล์ HTML ไปยังโฟลเดอร์เริ่มต้นของ Nginx
+COPY index.html /usr/share/nginx/html/index.html
 
-RUN go mod init app
+# เปิดพอร์ต 80
+EXPOSE 80
 
-RUN go build -o main .
+# docker build -t www:v1 .
 
-FROM public.ecr.aws/docker/library/alpine:3.19.1
-
-WORKDIR /app
-
-COPY --from=build /app/main .
-
-EXPOSE 8080
-
-CMD ["./main"]
+# docker run -it --name www -p 8022:80 www:v1
+# docker run -it --name www -p 8022:80 docker.io/library/www:v1
