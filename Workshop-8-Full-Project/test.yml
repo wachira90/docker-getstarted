@@ -47,6 +47,7 @@ services:
     networks:
       - myapp
     deploy:
+      replicas: 1
       resources:
         limits:
           cpus: '1'
@@ -54,6 +55,9 @@ services:
         reservations:
           cpus: '0.5'
           memory: 256M
+      update_config:
+        parallelism: 1
+        delay: 10s
       restart_policy:
         condition: any
     secrets:
@@ -67,6 +71,7 @@ services:
     networks:
       - myapp
     deploy:
+      replicas: 1
       resources:
         limits:
           cpus: '0.25'
@@ -74,6 +79,9 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
+      update_config:
+        parallelism: 1
+        delay: 10s
       restart_policy:
         condition: any
 
@@ -87,6 +95,20 @@ services:
         - source: web_file
           target: /var/www/html/index.php
       command: ["php", "-S", "0.0.0.0:8080", "-d", "display_errors=1", "-t", "/var/www/html/"]
+      deploy:
+        replicas: 1
+        resources:
+          limits:
+            cpus: '0.25'
+            memory: 256M
+          reservations:
+            cpus: '0.1'
+            memory: 128M
+        update_config:
+          parallelism: 1
+          delay: 10s
+        restart_policy:
+          condition: any
 
   api:
       image: docker.io/library/myphp:v1
@@ -99,6 +121,20 @@ services:
         - source: api_file
           target: /var/www/html/index.php
       command: ["php", "-S", "0.0.0.0:8080", "-d", "display_errors=1", "-t", "/var/www/html/"]
+      deploy:
+        replicas: 1
+        resources:
+          limits:
+            cpus: '0.25'
+            memory: 256M
+          reservations:
+            cpus: '0.1'
+            memory: 128M
+        update_config:
+          parallelism: 1
+          delay: 10s
+        restart_policy:
+          condition: any
 
 configs:
   ingress_config:

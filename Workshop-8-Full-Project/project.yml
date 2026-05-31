@@ -12,6 +12,8 @@ services:
     configs:
       - source: ingress_config
         target: /etc/nginx/conf.d/default.conf
+      - source: ingress_system_config
+        target: /etc/nginx/nginx.conf
     deploy:
       replicas: 1
       resources:
@@ -45,6 +47,7 @@ services:
     networks:
       - myapp
     deploy:
+      replicas: 1
       resources:
         limits:
           cpus: '1'
@@ -65,6 +68,7 @@ services:
     networks:
       - myapp
     deploy:
+      replicas: 1
       resources:
         limits:
           cpus: '0.25'
@@ -85,6 +89,17 @@ services:
         - source: web_file
           target: /var/www/html/index.php
       command: ["php", "-S", "0.0.0.0:8080", "-d", "display_errors=1", "-t", "/var/www/html/"]
+      deploy:
+        replicas: 1
+        resources:
+          limits:
+            cpus: '0.25'
+            memory: 256M
+          reservations:
+            cpus: '0.1'
+            memory: 128M
+        restart_policy:
+          condition: any
 
   api:
       image: php:8.3.31-fpm
@@ -96,10 +111,23 @@ services:
         - source: api_file
           target: /var/www/html/index.php
       command: ["php", "-S", "0.0.0.0:8080", "-d", "display_errors=1", "-t", "/var/www/html/"]
+      deploy:
+        replicas: 1
+        resources:
+          limits:
+            cpus: '0.25'
+            memory: 256M
+          reservations:
+            cpus: '0.1'
+            memory: 128M
+        restart_policy:
+          condition: any
 
 configs:
   ingress_config:
     file: ./default.conf
+  ingress_system_config:
+    file: ./nginx.conf
   my_init_script:
     file: ./initdb.sql
   web_file:
