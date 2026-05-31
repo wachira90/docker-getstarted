@@ -1,0 +1,68 @@
+version: "3.8"
+
+services:
+  www:
+    container_name: www
+    image: nginx:1.31.0-alpine-slim
+    ports:
+      # รูปแบบการเขียน Port แบบละเอียด (Long syntax)
+      - target: 80
+        published: 8080
+        protocol: tcp
+        mode: ingress
+    networks:
+      - webnet
+    volumes:
+      - web-data:/usr/share/nginx/html
+    environment:
+      - TZ=Asia/Bangkok
+    
+    # ส่วน deploy จะถูกใช้งานเฉพาะเมื่อรันด้วยคำสั่ง docker stack deploy เท่านั้น
+    deploy:
+      mode: replicated
+      replicas: 2
+      
+      # การกำหนดตำแหน่งที่จะให้ Container รัน (Placement Constraints)
+      # placement:
+      #   constraints:
+      #     - node.role == worker  # บังคับให้รันเฉพาะบน Worker Node เท่านั้น (Manager จะได้ไม่ทำงานหนัก)
+          
+      # การจำกัดทรัพยากรเครื่อง (Resource Limits)
+      resources:
+        limits:
+          cpus: '0.50'           # จำกัดให้ใช้ CPU สูงสุดไม่เกินครึ่งคอร์ (50%)
+          memory: 512M           # จำกัด RAM สูงสุดไม่เกิน 512 Megabytes
+        reservations:
+          cpus: '0.25'           # การันตีว่าต้องมี CPU ให้ใช้อย่างน้อย 25%
+          memory: 256M           # การันตีว่าต้องมี RAM ให้ใช้อย่างน้อย 256 Megabytes
+          
+      # การตั้งค่าเมื่อมีการอัปเดตเวอร์ชัน (Rolling Update) เพื่อไม่ให้เว็บล่ม
+      update_config:
+        parallelism: 1           # ให้อัปเดตทีละ 1 Container
+        delay: 10s               # รอ 10 วินาทีก่อนจะไปอัปเดต Container ตัวต่อไป
+        order: start-first       # สร้าง Container ตัวใหม่ให้เสร็จก่อน แล้วค่อยลบตัวเก่า
+        
+      # การจัดการเมื่อ Container พังหรือขัดข้อง (Restart Policy)
+      restart_policy:
+        condition: on-failure    # ให้รีสตาร์ทเมื่อเกิดข้อผิดพลาด (Failure)
+        delay: 5s                # รอ 5 วินาทีก่อนพยายามรีสตาร์ทใหม่
+        max_attempts: 3          # ลองรีสตาร์ทสูงสุด 3 ครั้ง หากไม่สำเร็จให้หยุด
+
+# การสร้าง Network แบบ Overlay (เพื่อให้ Container ข้ามเครื่องคุยกันได้)
+networks:
+  webnet:
+    driver: overlay
+
+# การสร้าง Volume สำหรับเก็บข้อมูลถาวร
+volumes:
+  web-data:
+
+# docker stack deploy -c ingress-stack.yml myingress
+# docker stack ps myingress
+# docker stack services myingress
+# docker stack rm myingress
+# URL: http://localhost:8080/
+
+# docker service update --image nginx:1.30.2-alpine-slim myingress_www
+# docker service update --image nginx:1.31.0-alpine-slim myingress_www
+
